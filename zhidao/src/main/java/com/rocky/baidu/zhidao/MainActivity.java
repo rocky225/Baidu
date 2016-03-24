@@ -1,25 +1,19 @@
 package com.rocky.baidu.zhidao;
 
 import android.annotation.TargetApi;
-import android.net.ProxyInfo;
-import android.net.wifi.WifiConfiguration;
-import android.net.wifi.WifiManager;
+import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Build;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.util.Log;
+import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.rocky.baidu.zhidao.webview.WebActivity;
 import com.rocky.baidu.zhidao.wifi.WifiAdmin;
-
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
-import java.util.List;
 
 
 public class MainActivity extends ActionBarActivity {
@@ -45,11 +39,29 @@ public class MainActivity extends ActionBarActivity {
         setContentView(R.layout.activity_main);
 
         // WIFI连接
-        wifi  = new WifiAdmin(this);
+//        wifi  = new WifiAdmin(this);
         // 使用代理连接
-        wifi.connectConfiguration("61.174.13.12",80);
+//        wifi.connectConfiguration("61.174.13.12",80);
 
-        init_views();
+//        init_views();
+        Intent intent = new Intent();
+        intent.setClass(this, WebActivity.class);
+        startActivity(intent);
+
+//        text_log.setText("网络连接: " + netIsConnected());
+    }
+
+    private boolean netIsConnected() {
+        // 获取手机所有连接管理对象（包括对wi-fi,net等连接的管理）
+        ConnectivityManager connectivityManager = (ConnectivityManager)getSystemService(CONNECTIVITY_SERVICE);
+        // 获取NetworkInfo对象
+        NetworkInfo[] networkInfo = connectivityManager.getAllNetworkInfo();
+        for(NetworkInfo info : networkInfo) {
+            if (info.getState() == NetworkInfo.State.CONNECTED) {
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override
